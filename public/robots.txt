@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://clipshare.vercel.app/sitemap.xml
+Sitemap: https://clipshare06.vercel.app/sitemap.xml
