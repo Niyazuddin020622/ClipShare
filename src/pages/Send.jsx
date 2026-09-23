@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CheckCircle2,
   FileText,
@@ -20,6 +20,33 @@ function Send() {
   const [error, setError] = useState("");
   const [shareData, setShareData] = useState(null);
 
+  // Restore previously generated share code
+  // when user comes back to Send page
+  useEffect(() => {
+    try {
+      const savedShareData = sessionStorage.getItem(
+        "clipshare_share_data"
+      );
+
+      if (savedShareData) {
+        const parsedData = JSON.parse(savedShareData);
+
+        // Check if the saved content has expired
+        if (
+          parsedData?.expiresAt &&
+          new Date(parsedData.expiresAt).getTime() > Date.now()
+        ) {
+          setShareData(parsedData);
+        } else {
+          sessionStorage.removeItem("clipshare_share_data");
+        }
+      }
+    } catch (error) {
+      console.error("Failed to restore share data:", error);
+      sessionStorage.removeItem("clipshare_share_data");
+    }
+  }, []);
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -27,7 +54,9 @@ function Send() {
     setShareData(null);
 
     if (!text.trim() && files.length === 0) {
-      setError("Please enter some text or upload at least one file.");
+      setError(
+        "Please enter some text or upload at least one file."
+      );
       return;
     }
 
@@ -49,8 +78,18 @@ function Send() {
       );
 
       if (response.data.success) {
-        setShareData(response.data.data);
+        const generatedData = response.data.data;
 
+        // Show in current page
+        setShareData(generatedData);
+
+        // Save so it survives route changes / refresh
+        sessionStorage.setItem(
+          "clipshare_share_data",
+          JSON.stringify(generatedData)
+        );
+
+        // Clear input after successful creation
         setText("");
         setFiles([]);
       }
@@ -76,14 +115,19 @@ function Send() {
     }
   };
 
+  const handleClearShareData = () => {
+    setShareData(null);
+    sessionStorage.removeItem("clipshare_share_data");
+  };
+
   return (
-    
     <section className="min-h-[calc(100vh-128px)] bg-gray-50 px-4 py-10 sm:px-6 lg:px-8">
       <SEO
-  title="Send Text & Files Online With ClipShare"
-  description="Send text, code, images, PDFs and files online with ClipShare. Generate a temporary sharing code and retrieve your content from another device."
-  path="/send"
-/>
+        title="Send Text & Files Online With ClipShare"
+        description="Send text, code, images, PDFs and files online with ClipShare. Generate a temporary sharing code and retrieve your content from another device."
+        path="/send"
+      />
+
       <div className="mx-auto max-w-3xl">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">
@@ -126,6 +170,14 @@ function Send() {
               Expires at{" "}
               {new Date(shareData.expiresAt).toLocaleString()}
             </p>
+
+            <button
+              type="button"
+              onClick={handleClearShareData}
+              className="mt-4 text-xs font-medium text-red-600 hover:text-red-700"
+            >
+              Clear Share Code
+            </button>
           </div>
         )}
 
@@ -169,7 +221,9 @@ function Send() {
 
               <textarea
                 value={text}
-                onChange={(event) => setText(event.target.value)}
+                onChange={(event) =>
+                  setText(event.target.value)
+                }
                 placeholder="Paste your text or code here..."
                 rows={12}
                 className="w-full resize-y rounded-2xl border border-gray-300 bg-white p-4 text-sm leading-6 outline-none transition placeholder:text-gray-400 focus:border-gray-900 focus:ring-2 focus:ring-gray-200"
@@ -218,7 +272,9 @@ function Send() {
           >
             <SendIcon size={18} />
 
-            {loading ? "Generating..." : "Generate Share Code"}
+            {loading
+              ? "Generating..."
+              : "Generate Share Code"}
           </button>
         </form>
       </div>
