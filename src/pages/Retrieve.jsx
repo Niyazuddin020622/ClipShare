@@ -7,6 +7,7 @@ import {
   Search,
 } from "lucide-react";
 import axios from "axios";
+import SEO from "../components/SEO";
 
 import CodeInput from "../components/CodeInput";
 
@@ -71,6 +72,11 @@ function Retrieve() {
 
   return (
     <section className="min-h-[calc(100vh-128px)] bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <SEO
+  title="Retrieve Shared Files & Text With a Code | ClipShare"
+  description="Retrieve shared text, code, images and files using your ClipShare sharing code. Enter your 6-digit code to access your shared content."
+  path="/retrieve"
+/>
       <div className="mx-auto max-w-2xl">
         <div className="mb-8 text-center">
           <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-gray-900 text-white">

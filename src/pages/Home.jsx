@@ -7,10 +7,16 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import SEO from "../components/SEO";
 
 function Home() {
   return (
     <div>
+      <SEO
+  title="ClipShare - Online Clipboard, Text & File Sharing"
+  description="ClipShare is a fast online clipboard and file sharing tool for sharing text, code, images, PDFs and files between devices using a temporary sharing code."
+  path="/"
+/>
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 sm:pt-24 lg:px-8 lg:pb-28">

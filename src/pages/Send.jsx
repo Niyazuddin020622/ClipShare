@@ -6,6 +6,7 @@ import {
   Upload,
 } from "lucide-react";
 import axios from "axios";
+import SEO from "../components/SEO";
 
 import FileUpload from "../components/FileUpload";
 
@@ -76,7 +77,13 @@ function Send() {
   };
 
   return (
+    
     <section className="min-h-[calc(100vh-128px)] bg-gray-50 px-4 py-10 sm:px-6 lg:px-8">
+      <SEO
+  title="Send Text & Files Online With ClipShare"
+  description="Send text, code, images, PDFs and files online with ClipShare. Generate a temporary sharing code and retrieve your content from another device."
+  path="/send"
+/>
       <div className="mx-auto max-w-3xl">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold tracking-tight text-gray-950 sm:text-4xl">
